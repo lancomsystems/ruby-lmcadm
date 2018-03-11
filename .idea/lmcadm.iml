@@ -13,7 +13,7 @@
     <orderEntry type="library" scope="PROVIDED" name="gli (v2.17.1, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="http-cookie (v1.0.3, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="json (v2.1.0, rbenv: 2.4.1) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="lmc (v0.1.0, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="lmc (v0.2.0, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mime-types (v3.1, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mime-types-data (v3.2016.0521, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v5.11.3, rbenv: 2.4.1) [gem]" level="application" />
