@@ -1,0 +1,88 @@
+#!/usr/bin/env ruby
+
+require 'lmc'
+require "lmcadm"
+require 'gli'
+require 'table_print'
+
+module LMCAdm
+
+  # make gli dsl available
+  include GLI::App
+  extend self
+
+  program_desc 'LMC command line client'
+
+
+  version LMCAdm::VERSION
+
+  subcommand_option_handling :normal
+  arguments :strict
+
+  config_file '.lmcadm.rc'
+
+  desc 'Be verbose'
+  switch [:v, :verbose]
+
+  desc 'debug'
+  switch [:debug]
+
+  desc 'Measure time taken for operations'
+  switch "take-time"
+
+  desc 'cloud host'
+  default_value "lmc-en"
+  flag :C, :cloud_host
+
+  desc 'Use encrypted connection'
+  default_value true
+  switch "use-tls"
+
+  desc 'Verify server certificate'
+  default_value true
+  switch "verify-tls"
+
+  desc 'username'
+  default_value "admin"
+  flag :U, :user
+
+  desc 'password'
+  default_value ""
+  flag [:P, :password], :mask => true
+
+  desc 'Check cloud connectivity'
+  command :cloud do |c|
+    c.action do |global_options|
+      lmcen = LMC::Cloud.new(global_options[:cloud_host], global_options[:user], global_options[:password])
+      puts "Base URL: #{lmcen.build_url}"
+      puts "Cloud connection OK" if lmcen.auth_ok
+      if global_options[:v]
+        puts "authentication token: " + lmcen.session_token
+      end
+    end
+  end
+
+  pre do |global, command, options, args|
+    # Pre logic here
+    # Return true to proceed; false to abort and not call the
+    # chosen command
+    # Use skips_pre before a command to skip this block
+    # on that command only
+    if global[:password] == ""
+      puts "Enter password for " + global[:user] + ":"
+      global[:password] = STDIN.noecho(&:gets).strip
+    end
+    ::LMC::Cloud.cloud_host = global[:cloud_host]
+    ::LMC::Cloud.user = global[:user]
+    ::LMC::Cloud.password = global[:password]
+    ::LMC::Cloud.verbose = global[:verbose]
+    ::LMC::Cloud.debug = global[:debug]
+    ::LMC::Cloud.verify_tls = global["verify-tls"]
+    ::LMC::Cloud.use_tls = global["use-tls"]
+    LMCAdm::ProgressVisualizer.take_time = global["take-time"]
+    true
+  end
+
+  exit run(ARGV)
+
+end

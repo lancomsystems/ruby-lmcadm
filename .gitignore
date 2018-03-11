@@ -1,0 +1,13 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+/.idea/workspace.xml
+/.idea/tasks.xml
+/.idea/.rakeTasks
+/Gemfile.lock
+/lmcadm-*.gem
