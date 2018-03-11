@@ -4,6 +4,7 @@ require 'lmc'
 require "lmcadm"
 require 'gli'
 require 'table_print'
+require 'colorize'
 
 module LMCAdm
 
