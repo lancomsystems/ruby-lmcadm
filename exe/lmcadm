@@ -60,7 +60,7 @@ module LMCAdm
     # on that command only
     if global[:password] == ""
       puts "Enter password for " + global[:user] + ":"
-      global[:password] = STDIN.noecho(&:gets).strip
+      global[:password] = Helpers::read_pw
     end
     ::LMC::Cloud.cloud_host = global[:cloud_host]
     ::LMC::Cloud.user = global[:user]

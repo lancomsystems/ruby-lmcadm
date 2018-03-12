@@ -35,10 +35,8 @@ module LMCAdm
       cloud_register.action do |global_options, options|
         newdata = {}
         if options[:password]
-          puts "Enter new password for " + global_options[:user] + ":"
-          newpass = STDIN.noecho(&:gets).strip
-          puts "Confirm password " + global_options[:user] + ":"
-          newpass_confirm = STDIN.noecho(&:gets).strip
+          newpass = Helpers::read_pw "Enter new password for " + global_options[:user] + ":"
+          newpass_confirm = Helpers::read_pw "Confirm password " + global_options[:user] + ":"
           raise 'Mismatch' unless newpass == newpass_confirm
           newdata['password'] = newpass
         end
