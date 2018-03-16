@@ -85,8 +85,7 @@ module LMCAdm
     #  puts exception
     #  puts exception.backtrace
     #end
-    #true
-
+    true
   end
 
   exit run(ARGV)
