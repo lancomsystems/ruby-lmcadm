@@ -22,6 +22,8 @@ module LMCAdm
 
   config_file '.lmcadm.rc'
 
+  commands_from "lmcadm/commands"
+
   desc 'Be verbose'
   switch [:v, :verbose]
 
