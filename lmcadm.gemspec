@@ -32,8 +32,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest", "~> 5.0"
+  spec.add_development_dependency "pry-nav", "0.2.4"
 
-  spec.add_runtime_dependency 'lmc', '~> 0.2.0'
+  spec.add_runtime_dependency 'lmc', '~> 0.3.0'
   spec.add_runtime_dependency 'gli', '~> 2.17'
   spec.add_runtime_dependency 'table_print', '~> 1.5'
   spec.add_runtime_dependency 'colorize'
