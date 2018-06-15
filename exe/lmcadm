@@ -15,7 +15,7 @@ module LMCAdm
   program_desc 'LMC command line client'
 
 
-  version LMCAdm::VERSION
+  version "#{LMCAdm::VERSION} (library version #{::LMC::VERSION})"
 
   subcommand_option_handling :normal
   arguments :strict
