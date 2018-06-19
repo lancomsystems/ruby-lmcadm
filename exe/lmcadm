@@ -82,11 +82,11 @@ module LMCAdm
   end
 
   on_error do |exception|
-    #if LMC::Cloud.debug
-    #  puts "on_error handler"
-    #  puts exception
-    #  puts exception.backtrace
-    #end
+    if LMC::Cloud.debug
+      puts "on_error handler"
+      puts exception
+      puts exception.backtrace
+    end
     true
   end
 
