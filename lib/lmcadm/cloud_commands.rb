@@ -29,6 +29,35 @@ module LMCAdm
 
       end
     end
+
+    c.desc 'View and accept terms of use information'
+    c.command :tos do |tos|
+      tos.default_desc 'View terms of service'
+      tos.action do ||
+        begin
+          c = LMC::Cloud.instance
+          puts "No outstanding terms of service"
+        rescue LMC::OutdatedTermsOfUseException => e
+          puts e.response
+        end
+      end
+      tos.arg_name 'TOS name', :multiple => true
+      tos.desc 'Accept terms of use by name'
+      tos.command :accept do |accept|
+        accept.action do |global_options, options, args|
+        begin
+          cloud = LMC::Cloud.instance
+        rescue LMC::OutdatedTermsOfUseException => e
+            matched_tos = e.missing.select do |missingtos|
+              args.include? missingtos['name']
+            end
+            cloud = LMC::Cloud.instance authorize: false
+            puts "Accepting TOS #{matched_tos.to_s}"
+            cloud.accept_tos matched_tos
+          end
+        end
+      end
+    end
     c.desc 'Change user information'
     c.command :changeuser do |cloud_register|
       cloud_register.switch :password

@@ -263,6 +263,36 @@ module LMCAdm
       end
     end
 =end
+    c.arg_name "Account name|UUID", [:required]
+    c.desc 'List authorities'
+    c.command :authorities do |auth|
+
+      auth.action do |g, o, args|
+        account = LMC::Account.get_by_uuid_or_name args.first
+        authorities = account.authorities
+        puts authorities.first.inspect
+        max = Helpers::longest_in_collection(authorities.map {|a| a.name})
+        puts max
+        tp authorities, [{:id => {:width => 36}}, {:name => {:width => max}}, :visibility, :type]
+      end
+    end
+
+    c.arg_name "email address", [:multiple]
+    c.desc 'Invite members, requires an account type'
+    c.command :invite do |account_invite|
+      account_invite.flag :A, :account, :required => true
+      account_invite.flag :r, :role, :required => true
+      account_invite.flag :t, :type, :required => true
+      account_invite.action do |global_options, options, args|
+        account = LMC::Account.get_by_uuid_or_name options[:account]
+        cloud = LMC::Cloud.instance
+        chosen_authorities = account.authorities.select {|auth| auth.name == options[:role]}
+        args.each do |email|
+            cloud.invite_user_to_account email, account.id, options[:type], chosen_authorities
+        end
+      end
+
+    end
 
     c.desc 'Leave account'
     c.arg_name "Account id"
@@ -273,6 +303,26 @@ module LMCAdm
         puts account.remove_membership_self
       end
     end
+
+    c.arg_name 'member name', [:required]
+    c.desc 'Add Member'
+    c.command :memberadd do |ma|
+      ma.flag :A, :account, :required => true
+      ma.action do |global_options, options, args|
+        account = LMC::Account.get_by_uuid_or_name(options[:account])
+        membership = LMC::Membership.new
+        membership.name = args.first
+        membership.type = "MEMBER"
+        membership.state = "ACTIVE"
+        membership.authorities = [LMC::Authority::CLOUD_SERVICE_DEVICE_PRIVATE_CLOUD]
+        puts membership.to_json
+        c = LMC::Cloud.instance
+        target_account = LMC::Account.get_by_uuid_or_name options[:account]
+        c.auth_for_account LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
+        c.post ['cloud-service-auth', 'accounts', target_account.id, 'members'], membership
+      end
+    end
+
 
     c.arg_name 'member name', [:required]
     c.desc 'Remove member from account'
