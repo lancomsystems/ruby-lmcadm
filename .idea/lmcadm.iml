@@ -7,19 +7,53 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="rbenv: 2.4.1" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.16.1, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="module-library">
+      <library name="lmc (v0.4.0) [path][gem]" type="ruby">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../ruby-lmc/bin" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/lib" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/pkg" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/.git" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/test" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/.idea" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/coverage" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../ruby-lmc/bin" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/lib" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/pkg" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/.git" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/test" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/.idea" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/coverage" />
+        </SOURCES>
+        <excluded>
+          <root url="file://$MODULE_DIR$/../ruby-lmc/bin" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/pkg" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/.git" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/test" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/.idea" />
+          <root url="file://$MODULE_DIR$/../ruby-lmc/coverage" />
+        </excluded>
+      </library>
+    </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.16.2, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="coderay (v1.1.2, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="colorize (v0.8.1, rbenv: 2.4.1) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20170404, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20180417, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="gli (v2.17.1, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="http-cookie (v1.0.3, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="json (v2.1.0, rbenv: 2.4.1) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="lmc (v0.2.0, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="method_source (v0.8.2, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mime-types (v3.1, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mime-types-data (v3.2016.0521, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v5.11.3, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="netrc (v0.11.0, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="pry (v0.10.4, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="pry-nav (v0.2.4, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rake (v10.5.0, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rest-client (v2.0.2, rbenv: 2.4.1) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="slop (v3.6.0, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="table_print (v1.5.6, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unf (v0.1.4, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unf_ext (v0.0.7.5, rbenv: 2.4.1) [gem]" level="application" />
