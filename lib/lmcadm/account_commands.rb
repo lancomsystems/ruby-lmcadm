@@ -159,7 +159,12 @@ module LMCAdm
       memberlist.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name args.first
         members = account.members
-        tp members, [{:id => {:width => 36}}, :name, :type, :state, :invitationState, :principalState, :authorities]
+        tp members, [{:id => {:width => 36}}, :name, :type, :state, :invitationState, :principalState,
+                     :authorities => lambda {|m|
+                       m.authorities.map {|a|
+                         a['name']
+                       }.join(',')
+                     }]
       end
     end
 
@@ -270,10 +275,22 @@ module LMCAdm
       auth.action do |g, o, args|
         account = LMC::Account.get_by_uuid_or_name args.first
         authorities = account.authorities
-        puts authorities.first.inspect
         max = Helpers::longest_in_collection(authorities.map {|a| a.name})
         puts max
         tp authorities, [{:id => {:width => 36}}, {:name => {:width => max}}, :visibility, :type]
+      end
+    end
+    c.desc 'Manage authorities'
+    c.command :authority do |auth|
+      auth.arg_name 'Authority name', [:required]
+      auth.command :create do |create|
+        create.desc 'Account name|UUID'
+        create.flag :A, :required => true
+        create.action do |_global_options, options, _args|
+          account = LMC::Account.get_by_uuid_or_name options[:A]
+          auth = LMC::Authority.new({'name' => _args.first, 'visibility' => 'PRIVATE'}, account)
+          puts auth.save
+        end
       end
     end
 
@@ -288,7 +305,7 @@ module LMCAdm
         cloud = LMC::Cloud.instance
         chosen_authorities = account.authorities.select {|auth| auth.name == options[:role]}
         args.each do |email|
-            cloud.invite_user_to_account email, account.id, options[:type], chosen_authorities
+          cloud.invite_user_to_account email, account.id, options[:type], chosen_authorities
         end
       end
 
@@ -333,6 +350,37 @@ module LMCAdm
         membership = account.find_member_by_name args.first
         puts "Leave account \"#{account.name}\""
         puts account.remove_membership membership.id
+      end
+    end
+
+    c.arg_name 'member name', [:required]
+    c.desc 'Update membership'
+    c.command :memberupdate do |update|
+      update.flag :A, :account, :required => true
+      update.desc 'authority id'
+      update.flag 'add-authority'
+      update.action do |global_options, options, args|
+        account = LMC::Account.get_by_uuid_or_name(options[:account])
+        membership = account.find_member_by_name args.first
+        puts membership
+        if options['add-authority']
+          # new_authority = account.authorities.find do |a|
+          #   a.name == options['add-authority']
+          # end
+          puts membership.class
+          puts membership.authorities.class
+          authority_ids = membership.authorities.map do |a|
+            a['id']
+          end
+          puts authority_ids
+          authority_ids = authority_ids.concat [options['add-authority']]
+          puts authority_ids
+          # POST /accounts/{accountId}/members/{principalId}
+          cloud = LMC::Cloud.instance
+          cloud.auth_for_account account
+          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], {'authorities' => authority_ids}
+          puts res
+        end
       end
     end
 
@@ -389,6 +437,7 @@ module LMCAdm
             end
           end
         end
+
         recurse_childen account, 0
       end
     end

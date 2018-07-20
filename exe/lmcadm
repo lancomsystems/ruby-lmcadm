@@ -88,7 +88,7 @@ module LMCAdm
       puts exception.backtrace
     end
     if exception.respond_to?(:response)
-      puts exception.response
+      puts "Error response: #{exception.response}"
     end
     true
   end
