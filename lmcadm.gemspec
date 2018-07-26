@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = LMCAdm::VERSION
   spec.authors       = ["erpel"]
   spec.email         = ["philipp@copythat.de"]
-
+  spec.required_ruby_version = '~> 2.0'
   spec.summary       = %q{lmcadm is a command line client for LMC}
   spec.license       = "BSD-3-Clause"
 
