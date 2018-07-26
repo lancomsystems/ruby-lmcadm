@@ -8,7 +8,11 @@
     <orderEntry type="jdk" jdkName="rbenv: 2.4.1" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
+<<<<<<< HEAD
       <library name="lmc (v0.5.0) [path][gem]" type="ruby">
+=======
+      <library name="lmc (v0.4.0) [path][gem]" type="ruby">
+>>>>>>> 13d2fbf0f0dc2f39eecdce826fb1fa3776a5c95b
         <CLASSES>
           <root url="file://$MODULE_DIR$/../ruby-lmc/bin" />
           <root url="file://$MODULE_DIR$/../ruby-lmc/lib" />
@@ -37,7 +41,11 @@
         </excluded>
       </library>
     </orderEntry>
+<<<<<<< HEAD
     <orderEntry type="library" scope="PROVIDED" name="bundler (v1.16.1, rbenv: 2.4.1) [gem]" level="application" />
+=======
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.16.2, rbenv: 2.4.1) [gem]" level="application" />
+>>>>>>> 13d2fbf0f0dc2f39eecdce826fb1fa3776a5c95b
     <orderEntry type="library" scope="PROVIDED" name="coderay (v1.1.2, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="colorize (v0.8.1, rbenv: 2.4.1) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20180417, rbenv: 2.4.1) [gem]" level="application" />
