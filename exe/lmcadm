@@ -34,7 +34,7 @@ module LMCAdm
   switch "take-time"
 
   desc 'cloud host'
-  default_value "lmc-en"
+  default_value "cloud.lancom.de"
   flag :C, :cloud_host
 
   desc 'Use encrypted connection'
