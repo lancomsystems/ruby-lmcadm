@@ -330,7 +330,7 @@ module LMCAdm
         membership.name = args.first
         membership.type = "MEMBER"
         membership.state = "ACTIVE"
-        membership.authorities = [LMC::Authority::CLOUD_SERVICE_DEVICE_PRIVATE_CLOUD]
+        membership.authorities = []
         puts membership.to_json
         c = LMC::Cloud.instance
         target_account = LMC::Account.get_by_uuid_or_name options[:account]
