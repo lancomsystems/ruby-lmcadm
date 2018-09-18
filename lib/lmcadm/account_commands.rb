@@ -276,7 +276,6 @@ module LMCAdm
         account = LMC::Account.get_by_uuid_or_name args.first
         authorities = account.authorities
         max = Helpers::longest_in_collection(authorities.map {|a| a.name})
-        puts max
         tp authorities, [{:id => {:width => 36}}, {:name => {:width => max}}, :visibility, :type]
       end
     end
