@@ -6,7 +6,6 @@ module LMCAdm
       url.flag :A, :account
       url.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name options[:account]
-        puts account
         LMC::Cloud.instance.auth_for_account account
         LMC::Cloud.instance.put ["cloud-service-devices", "accounts", account.id, "redirect" ], { "url" => args.first }
       end
