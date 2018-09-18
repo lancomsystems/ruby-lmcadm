@@ -325,7 +325,7 @@ module LMCAdm
     c.command :memberadd do |ma|
       ma.flag :A, :account, :required => true
       ma.action do |global_options, options, args|
-        account = LMC::Account.get_by_uuid_or_name(options[:account])
+        target_account = LMC::Account.get_by_uuid_or_name options[:account]
         membership = LMC::Membership.new
         membership.name = args.first
         membership.type = "MEMBER"
@@ -333,7 +333,6 @@ module LMCAdm
         membership.authorities = []
         puts membership.to_json
         c = LMC::Cloud.instance
-        target_account = LMC::Account.get_by_uuid_or_name options[:account]
         c.auth_for_account LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
         c.post ['cloud-service-auth', 'accounts', target_account.id, 'members'], membership
       end
