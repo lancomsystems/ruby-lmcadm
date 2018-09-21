@@ -131,5 +131,25 @@ module LMCAdm
         t.finished " " + LMCADMResultInterpreter.interpret_with_color(result)
       end
     end
+
+    c.arg_name '"search string"'
+    c.desc 'Display device registration data'
+    c.long_desc 'Search for device registration data. Currently supports serial numbers as search strings.'
+    c.command :registration do |cmd|
+      cmd.action do |_global_options, _options, args|
+        root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
+        cloud = LMC::Cloud.instance
+        cloud.auth_for_account root_account
+        result = cloud.get ['cloud-service-devices', 'registrations'], {'updatePairing' => false, "status.serial" => args.first}
+        result.body.each do |registration|
+
+          registration.status.keys.each {|key|
+            puts "#{key}: #{registration.status[key]}"
+          }
+          puts "account id: #{registration.accountId}" if registration.accountId
+        end
+
+      end
+    end
   end
 end
