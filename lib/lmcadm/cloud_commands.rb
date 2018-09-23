@@ -45,15 +45,15 @@ module LMCAdm
       tos.desc 'Accept terms of use by name'
       tos.command :accept do |accept|
         accept.action do |global_options, options, args|
-        begin
-          cloud = LMC::Cloud.instance
-        rescue LMC::OutdatedTermsOfUseException => e
-            matched_tos = e.missing.select do |missingtos|
-              args.include? missingtos['name']
-            end
-            cloud = LMC::Cloud.instance authorize: false
-            puts "Accepting TOS #{matched_tos.to_s}"
-            cloud.accept_tos matched_tos
+          begin
+            cloud = LMC::Cloud.instance
+          rescue LMC::OutdatedTermsOfUseException => e
+              matched_tos = e.missing.select do |missingtos|
+                args.include? missingtos['name']
+              end
+              cloud = LMC::Cloud.instance authorize: false
+              puts "Accepting TOS #{matched_tos.to_s}"
+              cloud.accept_tos matched_tos
           end
         end
       end
