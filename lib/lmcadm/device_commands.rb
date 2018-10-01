@@ -146,9 +146,14 @@ module LMCAdm
           registration.status.keys.each {|key|
             puts "#{key}: #{registration.status[key]}"
           }
-          puts "account id: #{registration.accountId}" if registration.accountId
-        end
+          if registration.accountId
+            #TODO Check if account info can be displayed via another endpoint
+            #account = LMC::Account.get registration.accountId
+            #puts account
+            puts "accountID: #{registration.accountId}"
+          end
 
+        end
       end
     end
   end
