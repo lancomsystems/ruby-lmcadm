@@ -16,7 +16,7 @@ module LMCAdm
 
       device_list.action do |global_options, options|
         account = LMC::Account.get_by_uuid_or_name options[:account]
-        t=ProgressVisualizer.new "Getting devices"
+        t = ProgressVisualizer.new "Getting devices"
         devices = LMC::Device.get_for_account(account)
         t.done
         cols = [{:id => {width: 36}}, :name, :model, :serial, :heartbeatstate]
@@ -66,7 +66,7 @@ module LMCAdm
           puts "result_config class: " + result_config.body_object.class.to_s if global_options[:debug]
           pretty = JSON.pretty_generate(result_config)
           if options[:w]
-            IO.write(options[:prefix] + "-" + device.name + '-' + device.id + ".json",pretty)
+            IO.write(options[:prefix] + "-" + device.name + '-' + device.id + ".json", pretty)
           else
             puts pretty
           end
@@ -106,11 +106,11 @@ module LMCAdm
           raise "Device not found"
         end
 
-        t=ProgressVisualizer.new "Getting current config..."
+        t = ProgressVisualizer.new "Getting current config..."
         config = device.get_config_for_account(account)
         t.finished " Done".green
 
-        t=ProgressVisualizer.new "Applying changes..."
+        t = ProgressVisualizer.new "Applying changes..."
         if options[:jsonfile]
           jsoncontent = IO.read(options[:jsonfile])
           configchange = JSON.parse jsoncontent
@@ -123,10 +123,10 @@ module LMCAdm
         t.finished " Done".green
 
         puts JSON.pretty_generate(config) if global_options[:debug]
-        t=ProgressVisualizer.new "Submitting new config..."
+        t = ProgressVisualizer.new "Submitting new config..."
         result = device.set_config_for_account(config, account)
         if result.code == 200
-          print  " " + result["id"].to_s + "..."
+          print " " + result["id"].to_s + "..."
         end
         t.finished " " + LMCADMResultInterpreter.interpret_with_color(result)
       end
