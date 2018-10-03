@@ -8,7 +8,7 @@ module LMCAdm
         root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
         cloud = LMC::Cloud.instance
         cloud.auth_for_account root_account
-        pw = Helpers::read_pw "Enter password for #{args.first}"
+        pw = Helpers::read_pw "Enter new password for #{args.first}:"
         principal = LMC::Principal.new({ 'name' => args.first, 'password' => pw, 'type' => options[:type] })
         puts principal.save.inspect
         begin

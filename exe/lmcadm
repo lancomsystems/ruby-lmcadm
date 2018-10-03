@@ -61,8 +61,7 @@ module LMCAdm
     # Use skips_pre before a command to skip this block
     # on that command only
     if global[:password] == ""
-      puts "Enter password for " + global[:user] + ":"
-      global[:password] = Helpers::read_pw
+      global[:password] = Helpers::read_pw "Enter password for #{global[:user]}:"
     end
     ::LMC::Cloud.cloud_host = global[:cloud_host]
     ::LMC::Cloud.user = global[:user]
