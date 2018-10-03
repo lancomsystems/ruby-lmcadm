@@ -268,7 +268,7 @@ module LMCAdm
       end
     end
 =end
-    c.arg_name "Account name|UUID", [:required]
+    c.arg_name '"Account name"|UUID', [:required]
     c.desc 'List authorities'
     c.command :authorities do |auth|
 
@@ -283,7 +283,7 @@ module LMCAdm
     c.command :authority do |auth|
       auth.arg_name 'Authority name', [:required]
       auth.command :create do |create|
-        create.desc 'Account name|UUID'
+        create.desc '"Account name"|UUID'
         create.flag :A, :required => true
         create.action do |_global_options, options, _args|
           account = LMC::Account.get_by_uuid_or_name options[:A]

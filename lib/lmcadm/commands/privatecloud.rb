@@ -1,6 +1,6 @@
 module LMCAdm
   command :privatecloud do |pc|
-    pc.arg_name 'Redirect URL'
+    pc.arg_name '"Redirect URL"'
     pc.desc 'Set redirect URL for account'
     pc.command :url do |url|
       url.flag :A, :account
@@ -11,7 +11,7 @@ module LMCAdm
       end
     end
 
-    pc.arg_name 'Account name|UUID'
+    pc.arg_name '"Account name"|UUID'
     pc.desc 'Show privatecloud account infos'
     pc.command :show do |show|
       show.action do |global_options, options, args|
