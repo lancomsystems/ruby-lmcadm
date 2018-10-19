@@ -288,7 +288,8 @@ module LMCAdm
         create.action do |_global_options, options, _args|
           account = LMC::Account.get_by_uuid_or_name options[:A]
           auth = LMC::Authority.new({'name' => _args.first, 'visibility' => 'PRIVATE'}, account)
-          puts auth.save
+          auth.save
+          puts "#{auth} - #{auth.id}"
         end
       end
     end
