@@ -168,117 +168,17 @@ module LMCAdm
       end
     end
 
-    # Commented out due to bad quality at the moment.
-    # This code is untested after the gem split.
-=begin
-    c.desc 'Modify account members'
-    c.command :memberupdate do |memberupdate|
-      memberupdate.desc 'Account UUID'
-      memberupdate.flag :a, "account-uuid", :required => true
-
-      memberupdate.desc 'Principal UUID'
-      memberupdate.flag :u, :uuid, :required => true
-
-      memberupdate.desc 'Authority'
-      memberupdate.flag :authority
-
-      memberupdate.action do |global_options, options, args|
-        account = LMCAccount.get options[:a]
-
-        account_authorities = account.authorities
-        puts account_authorities.inspect if global_options[:debug]
-        authority = account_authorities.find {|auth| auth["name"] == options[:authority]}
-        puts authority if global_options[:debug]
-        puts "authority id: #{authority["id"]}" if global_options[:debug]
-
-        resp = account.update_member options[:u], {:authorities => [authority["id"]]}
-        puts "response: #{resp.inspect}"
-        if resp.code == 200
-          puts "Updated success"
-
-        else
-          loggerr.error "ERROR: #{resp.code} #{resp.body.message}"
-        end
-
-      end
-    end
-
-    c.arg_name "email address", [:optional, :multiple]
-    c.desc 'Invite members, requires an account type'
-    c.command :invite do |account_invite|
-
-      account_invite.desc "File with email addresses; one address per line"
-      account_invite.flag :file
-      #account_invite.desc "Email address to invite"
-      #account_invite.flag :
-      account_invite.desc 'Account name'
-      account_invite.flag :account_name, :A, :required => true
-
-      account_invite.desc 'Member type'
-      account_invite.default_value "MEMBER"
-      account_invite.flag :member_type
-
-      account_invite.desc 'Authority'
-      account_invite.default_value "PROJECT_VIEWER"
-      account_invite.flag :authority
-
-      account_invite.desc 'Do not make changes'
-      account_invite.switch :n, :dry
-
-      account_invite.desc "Send emails (deprecated)"
-      account_invite.default_value false
-      account_invite.switch :e, "send-mail", "send-email"
-
-      account_invite.default_value false
-      account_invite.switch "show-csv"
-
-      account_invite.action do |global_options, options, args|
-
-        puts "ARGS:" + args.inspect if global_options[:debug]
-        lmcen = Cloud.new(global_options[:cloud_host], global_options[:user], global_options[:password])
-        t = ProgressVisualizer.new "Getting account"
-        account = lmcen.get_account options[:account_name], options[GLI::Command::PARENT][:account_type]
-        t.done
-
-        am = AccountManager.new(options, global_options)
-        if options[:file]
-          t = ProgressVisualizer.new "Inviting from file"
-          File.foreach(options[:file]) do |line|
-            if nil != am.invite(lmcen, account, line, options[:member_type], options[:authority])
-              t.dot
-            else
-              t.X
-            end
-          end
-          t.done
-        end
-        if not args.empty?
-          t = ProgressVisualizer.new "Inviting from arguments"
-          args.each do |line|
-            if nil != am.invite(lmcen, account, line, options[:member_type], options[:authority])
-              t.dot
-            else
-              t.X
-            end
-          end
-          t.done
-        end
-        loggerr.info am.errors unless am.errors.empty?
-
-      end
-    end
-=end
     c.arg_name '"Account name"|UUID', [:required]
     c.desc 'List authorities'
     c.command :authorities do |auth|
-
-      auth.action do |g, o, args|
+      auth.action do |_g, _o, args|
         account = LMC::Account.get_by_uuid_or_name args.first
         authorities = account.authorities
         max = Helpers::longest_in_collection(authorities.map {|a| a.name})
         tp authorities, [{:id => {:width => 36}}, {:name => {:width => max}}, :visibility, :type]
       end
     end
+
     c.desc 'Manage authorities'
     c.command :authority do |auth|
       auth.arg_name 'Authority name', [:required]
@@ -307,13 +207,12 @@ module LMCAdm
           cloud.invite_user_to_account email, account.id, options[:type], chosen_authorities
         end
       end
-
     end
 
     c.desc 'Leave account'
     c.arg_name "Account id"
     c.command :leave do |leave|
-      leave.action do |global_options, options, args|
+      leave.action do |_global_options, _options, args|
         account = LMC::Account.get_by_uuid(args[0])
         puts "Leave account \"#{account.name}\""
         puts account.remove_membership_self
@@ -324,7 +223,7 @@ module LMCAdm
     c.desc 'Add Member'
     c.command :memberadd do |ma|
       ma.flag :A, :account, :required => true
-      ma.action do |global_options, options, args|
+      ma.action do |_global_options, options, args|
         target_account = LMC::Account.get_by_uuid_or_name options[:account]
         membership = LMC::Membership.new
         membership.name = args.first
@@ -343,7 +242,7 @@ module LMCAdm
     c.desc 'Remove member from account'
     c.command :memberremove do |memberremove|
       memberremove.flag :A, :account, :required => true
-      memberremove.action do |global_options, options, args|
+      memberremove.action do |_global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name(options[:account])
         membership = account.find_member_by_name args.first
         puts "Leave account \"#{account.name}\""
@@ -357,7 +256,7 @@ module LMCAdm
       update.flag :A, :account, :required => true
       update.desc 'authority id'
       update.flag 'add-authority'
-      update.action do |global_options, options, args|
+      update.action do |_global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name(options[:account])
         membership = account.find_member_by_name args.first
         puts membership
@@ -383,15 +282,6 @@ module LMCAdm
     end
 
 
-    # IF the special flag is set, do weird license magic for ninden
-    # * Für alle unterliegenden Organisationen
-    # -> POST /accounts/{accountId}/conditions/device-operation
-    # -> "templateAllowTestAllocation": true,
-    # -> "templateTestDuration": 30
-    # * Für alle unterliegenden Projekte
-    # -> POST /accounts/{accountId}/conditions/device-operation
-    # -> "allowTestAllocation": true,
-    # -> "testDuration": 30
     c.desc 'List account children'
     c.arg_name 'UUID|Name'
     c.command :children do |children|
@@ -400,31 +290,6 @@ module LMCAdm
         account = LMC::Account.get_by_uuid_or_name args.first
         cloud = LMC::Cloud.instance
 
-        # def recurse_print_children(root_acc, account, options, cloud)
-        #   children = root_acc.children_for_account_id account.id
-        #   children.each do |child|
-        #     puts "\n#{child["name"]} #{child["id"]} #{child["type"]}"
-        #     if options[:special] == "read"
-        #       puts cloud.get ["cloud-service-licenses", "accounts", child["id"], "conditions"]
-        #     end
-        #     if options[:special] == "write"
-        #       if child["type"] == "ORGANIZATION"
-        #         #puts cloud.get ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"]
-        #         puts cloud.post ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"], {"templateAllowTestAllocation" => true, "templateTestDuration": 30}
-        #       end
-        #       if child["type"] == "PROJECT"
-        #         #puts cloud.get ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"]
-        #         puts cloud.post ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"], {"allowTestAllocation" => true, "testDuration": 30}
-        #       end
-        #
-        #     end
-        #   end
-        #   children.each do |child|
-        #     childacc = LMCAccount.new(child)
-        #     recurse_print_children(childacc, childacc, options, cloud)
-        #   end
-        # end
-        #recurse_print_children(account, account, options, cloud)
         def recurse_childen account, indent_level
           children = account.children
           children.each do |child|
