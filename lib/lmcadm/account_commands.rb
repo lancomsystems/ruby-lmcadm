@@ -394,41 +394,12 @@ module LMCAdm
     # -> "allowTestAllocation": true,
     # -> "testDuration": 30
     c.desc 'List account children'
-    c.arg_name 'UUID|Name'
+    c.arg_name 'UUID'
     c.command :children do |children|
       children.flag :special
       children.action do |global_options, options, args|
         #todo: get by uuid or name only works for accounts one can directly access
-        # account = LMC::Account.get_by_uuid_or_name args.first
         account = LMC::Account.new({"id" => args.first})
-        #cloud = LMC::Cloud.instance
-
-        # def recurse_print_children(root_acc, account, options, cloud)
-        #   children = root_acc.children_for_account_id account.id
-        #   children.each do |child|
-        #     puts "\n#{child["name"]} #{child["id"]} #{child["type"]}"
-        #     if options[:special] == "read"
-        #       puts cloud.get ["cloud-service-licenses", "accounts", child["id"], "conditions"]
-        #     end
-        #     if options[:special] == "write"
-        #       if child["type"] == "ORGANIZATION"
-        #         #puts cloud.get ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"]
-        #         puts cloud.post ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"], {"templateAllowTestAllocation" => true, "templateTestDuration": 30}
-        #       end
-        #       if child["type"] == "PROJECT"
-        #         #puts cloud.get ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"]
-        #         puts cloud.post ["cloud-service-licenses", "accounts", child["id"], "conditions", "device-operation"], {"allowTestAllocation" => true, "testDuration": 30}
-        #       end
-        #
-        #     end
-        #   end
-        #   children.each do |child|
-        #     childacc = LMCAccount.new(child)
-        #     recurse_print_children(childacc, childacc, options, cloud)
-        #   end
-        # end
-        #recurse_print_children(account, account, options, cloud)
-        #
 
         def print_account_info_indented(account, indent_level)
           puts '    ' * indent_level + "#{account} (#{account.type} - #{account.id})"
@@ -446,11 +417,7 @@ module LMCAdm
           timer.done
           children.each do |child|
             print_account_info_indented child, indent_level
-            begin
-              recurse_childen child, indent_level + 1
-            rescue RestClient::Forbidden => e
-              puts e.to_s
-            end
+            recurse_childen child, indent_level + 1
           end
         end
 
