@@ -398,8 +398,10 @@ module LMCAdm
     c.command :children do |children|
       children.flag :special
       children.action do |global_options, options, args|
-        account = LMC::Account.get_by_uuid_or_name args.first
-        cloud = LMC::Cloud.instance
+        #todo: get by uuid or name only works for accounts one can directly access
+        # account = LMC::Account.get_by_uuid_or_name args.first
+        account = LMC::Account.new({"id" => args.first})
+        #cloud = LMC::Cloud.instance
 
         # def recurse_print_children(root_acc, account, options, cloud)
         #   children = root_acc.children_for_account_id account.id
@@ -426,18 +428,34 @@ module LMCAdm
         #   end
         # end
         #recurse_print_children(account, account, options, cloud)
+        #
+
+        def print_account_info_indented(account, indent_level)
+          puts '    ' * indent_level + "#{account} (#{account.type} - #{account.id})"
+        end
+
         def recurse_childen account, indent_level
-          children = account.children
+          timer = ProgressVisualizer.new("Getting children")
+          begin
+            children = account.children
+          rescue RestClient::GatewayTimeout => e
+            'Unable to fetch children'
+            LMCADMLogger.err << e.inspect
+            children = []
+          end
+          timer.done
           children.each do |child|
-            puts '  ' * indent_level + child.to_s
+            print_account_info_indented child, indent_level
             begin
               recurse_childen child, indent_level + 1
             rescue RestClient::Forbidden => e
+              puts e.to_s
             end
           end
         end
 
-        recurse_childen account, 0
+        print_account_info_indented account, 0
+        recurse_childen account, 1
       end
     end
   end
