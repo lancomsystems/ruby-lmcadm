@@ -1,17 +1,17 @@
 module LMCAdm
   command :maintenance do |maintenance|
-    maintenance.arg_name 'Account UUID'
+    maintenance.arg_name 'UUID'
     maintenance.desc 'Resync license status in devices service for an account'
     maintenance.command :licenseresync do |resync|
       resync.action do |global_options, options, args|
         root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
         cloud = LMC::Cloud.instance
         cloud.auth_for_account root_account
-        result = cloud.post ['cloud-service-devices', 'maintenance', 'licenses', 'resync'], {'accountId' => args[0]}
+        result = cloud.post ['cloud-service-devices', 'maintenance', 'licenses', 'resync'], { 'accountId' => args[0] }
       end
     end
 
-    maintenance.arg_name 'Account UUID'
+    maintenance.arg_name 'UUID'
     maintenance.desc 'Enable scripting for an account'
     maintenance.command :scripting do |scr|
       scr.switch :enable
@@ -21,6 +21,19 @@ module LMCAdm
         cloud.auth_for_account root_account
         result = cloud.put ['cloud-service-config', 'configroot', 'accounts', args.first, 'scriptauthority'], options[:enable]
         raise "error - unexpected result" unless result.body == options[:enable]
+      end
+    end
+
+    maintenance.arg_name 'UUID', required: true
+    maintenance.desc 'Exempt user from brute force blocking'
+    maintenance.command :whitelist do |wl|
+      wl.action do |_g, _o, args|
+        cloud = LMC::Cloud.instance
+        root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
+        cloud.auth_for_account root_account
+        # POST /accesscontrol/CLAIMING/whitelist/principals/{principalId}
+        url_components = ['cloud-service-devices', 'accesscontrol', 'CLAIMING', 'whitelist', 'principals', args.first]
+        cloud.post url_components, {}
       end
     end
   end
