@@ -26,6 +26,8 @@ module LMCAdm
                                                                              'versions' => info.versionInfoList.map {|vil| vil['version']}.uniq.join(",")
         }}
         tp backstage_infos
+        puts '---'
+        puts "Principal: #{LMC::Principal.get_self(cloud)}"
 
       end
     end
