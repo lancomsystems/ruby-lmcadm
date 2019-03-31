@@ -159,12 +159,12 @@ module LMCAdm
       memberlist.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name args.first
         members = account.members
-        tp members, [{:id => {:width => 36}}, :name, :type, :state, :invitationState, :principalState,
-                     :authorities => lambda {|m|
+        tp members, [{ :id => { :width => 36 } }, :name, :type, :state, :invitationState, :principalState,
+                     :authorities => { :display_method => lambda {|m|
                        m.authorities.map {|a|
                          a['name']
                        }.join(',')
-                     }]
+                     }, :width => 128 }]
       end
     end
 

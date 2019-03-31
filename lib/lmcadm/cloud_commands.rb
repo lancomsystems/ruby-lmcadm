@@ -75,5 +75,19 @@ module LMCAdm
         user.update(global_options[:password])
       end
     end
+
+    c.arg_name 'account'#, :multiple => true # no support for multiple accounts until the auth_for_accounts api is fixed
+    c.desc 'Request auth token'
+    c.command :token do |get_token|
+      get_token.action do |_g, _o, args|
+        accounts = args.map { |a|
+          LMC::Account.get_by_uuid_or_name a
+        }
+        accounts.each { |a|
+          a.cloud.auth_for_account a
+          puts a.cloud.session_token
+        }
+      end
+      end
+    end
   end
-end
