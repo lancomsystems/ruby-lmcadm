@@ -21,9 +21,9 @@ module LMCAdm
         #account = cloud.get_account(nil, 'ROOT')
         #puts account.inspect
         #cloud.auth_for_accounts([account.id])
-        backstage_infos = cloud.get_backstage_serviceinfos.body.map {|info| {'serviceId' => info.serviceId,
-                                                                             'instanceCount' => info.instanceCount,
-                                                                             'versions' => info.versionInfoList.map {|vil| vil['version']}.uniq.join(",")
+        backstage_infos = cloud.get_backstage_serviceinfos.body.map {|info| { 'serviceId' => info.serviceId,
+                                                                              'instanceCount' => info.instanceCount,
+                                                                              'versions' => info.versionInfoList.map {|vil| vil['version']}.uniq.join(",")
         }}
         tp backstage_infos
         puts '---'
@@ -50,12 +50,12 @@ module LMCAdm
           begin
             cloud = LMC::Cloud.instance
           rescue LMC::OutdatedTermsOfUseException => e
-              matched_tos = e.missing.select do |missingtos|
-                args.include? missingtos['name']
-              end
-              cloud = LMC::Cloud.instance authorize: false
-              puts "Accepting TOS #{matched_tos.to_s}"
-              cloud.accept_tos matched_tos
+            matched_tos = e.missing.select do |missingtos|
+              args.include? missingtos['name']
+            end
+            cloud = LMC::Cloud.instance authorize: false
+            puts "Accepting TOS #{matched_tos.to_s}"
+            cloud.accept_tos matched_tos
           end
         end
       end

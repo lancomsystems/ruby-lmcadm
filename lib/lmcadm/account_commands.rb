@@ -82,9 +82,9 @@ module LMCAdm
       account_create.action do |global_options, options, args|
         parent = LMC::Account.get_by_uuid_or_name options[:p]
         t = ProgressVisualizer.new "Creating object"
-        a = LMC::Account.new({"name" => args.first,
-                              "type" => options[GLI::Command::PARENT][:account_type],
-                              "parent" => parent.id})
+        a = LMC::Account.new({ "name" => args.first,
+                               "type" => options[GLI::Command::PARENT][:account_type],
+                               "parent" => parent.id })
         t.done
         t = ProgressVisualizer.new "Saving #{a.name}"
         result = a.save
@@ -276,7 +276,7 @@ module LMCAdm
         account = LMC::Account.get_by_uuid_or_name args.first
         authorities = account.authorities
         max = Helpers::longest_in_collection(authorities.map {|a| a.name})
-        tp authorities, [{:id => {:width => 36}}, {:name => {:width => max}}, :visibility, :type]
+        tp authorities, [{ :id => { :width => 36 } }, { :name => { :width => max } }, :visibility, :type]
       end
     end
     c.desc 'Manage authorities'
@@ -287,7 +287,7 @@ module LMCAdm
         create.flag :A, :required => true
         create.action do |_global_options, options, _args|
           account = LMC::Account.get_by_uuid_or_name options[:A]
-          auth = LMC::Authority.new({'name' => _args.first, 'visibility' => 'PRIVATE'}, account)
+          auth = LMC::Authority.new({ 'name' => _args.first, 'visibility' => 'PRIVATE' }, account)
           puts auth.save
         end
       end
@@ -376,7 +376,7 @@ module LMCAdm
           # POST /accounts/{accountId}/members/{principalId}
           cloud = LMC::Cloud.instance
           cloud.auth_for_account account
-          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], {'authorities' => authority_ids}
+          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], { 'authorities' => authority_ids }
           puts res
         end
       end
