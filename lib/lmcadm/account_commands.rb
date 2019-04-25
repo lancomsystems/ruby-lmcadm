@@ -117,7 +117,7 @@ module LMCAdm
         exit unless STDIN.gets.chomp == 'yes'
         t = ProgressVisualizer.new "Deleting accounts"
         matched_accounts.each do |a|
-          a.delete
+          a.delete!
           t.dot
         end
         t.done
