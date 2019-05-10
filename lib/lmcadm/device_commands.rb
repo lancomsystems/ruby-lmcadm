@@ -33,37 +33,42 @@ module LMCAdm
       end
     end
 
-    c.arg_name "device uuid", [:multiple]
+    c.arg_name "device uuid|name", [:multiple, :required]
     c.desc 'Show device config'
     c.command :config do |device_config|
       device_config.desc 'Account UUID|Name'
       device_config.flag :A, :account
 
+      device_config.desc 'Output descriptive identifiers'
+      device_config.switch :d, :descriptive
+
       device_config.desc 'Write to files'
       device_config.switch :w
+
       device_config.desc 'Prefix for files'
       device_config.default_value 'config'
       device_config.flag :p, :prefix
 
-      device_config.desc "Filter OID"
+      device_config.desc "Filter OID, incompatible with descriptive identifiers"
       device_config.flag :filter_oid, "filter-oid"
 
       device_config.action do |global_options, options, args|
+        raise "No devices specified" if args.length < 1
         account = LMC::Account.get_by_uuid_or_name options[:account]
         all_devices = LMC::Device.get_for_account(account)
         devices = all_devices.select do |device|
-          args.include? device.id
+          (args.include? device.id) || (args.include? device.name)
         end
         devices.each do |device|
-          full_config = device.get_config_for_account(account)
-          result_config = full_config
-          if options[:filter_oid]
-            result_config = full_config["items"].select do |item|
-              item == options[:filter_oid]
-            end
+          config = device.config
+          if options[:descriptive]
+            result_config = config.descriptive_confighash
+          elsif options[:filter_oid]
+            puts config.confighash
+            result_config = config.confighash[options[:filter_oid]]
+          else
+            result_config = config.confighash
           end
-          puts "result_config class: " + result_config.class.to_s if global_options[:debug]
-          puts "result_config class: " + result_config.body_object.class.to_s if global_options[:debug]
           pretty = JSON.pretty_generate(result_config)
           if options[:w]
             IO.write(options[:prefix] + "-" + device.name + '-' + device.id + ".json", pretty)
@@ -71,7 +76,6 @@ module LMCAdm
             puts pretty
           end
         end
-
       end
 
     end
