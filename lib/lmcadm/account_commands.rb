@@ -82,9 +82,9 @@ module LMCAdm
       account_create.action do |global_options, options, args|
         parent = LMC::Account.get_by_uuid_or_name options[:p]
         t = ProgressVisualizer.new "Creating object"
-        a = LMC::Account.new({ "name" => args.first,
-                               "type" => options[GLI::Command::PARENT][:account_type],
-                               "parent" => parent.id })
+        a = LMC::Account.new(LMC::Cloud.instance, {"name" => args.first,
+                                                   "type" => options[GLI::Command::PARENT][:account_type],
+                                                   "parent" => parent.id})
         t.done
         t = ProgressVisualizer.new "Saving #{a.name}"
         result = a.save
