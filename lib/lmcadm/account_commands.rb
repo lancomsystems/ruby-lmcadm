@@ -159,12 +159,12 @@ module LMCAdm
       memberlist.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name args.first
         members = account.members
-        tp members, [{ :id => { :width => 36 } }, :name, :type, :state, :invitationState, :principalState,
-                     :authorities => { :display_method => lambda {|m|
+        tp members, [{:id => {:width => 36}}, :name, :type, :state, :invitationState, :principalState,
+                     :authorities => {:display_method => lambda {|m|
                        m.authorities.map {|a|
                          a['name']
                        }.join(',')
-                     }, :width => 128 }]
+                     }, :width => 128}]
       end
     end
 
@@ -175,7 +175,7 @@ module LMCAdm
         account = LMC::Account.get_by_uuid_or_name args.first
         authorities = account.authorities
         max = Helpers::longest_in_collection(authorities.map {|a| a.name})
-        tp authorities, [{ :id => { :width => 36 } }, { :name => { :width => max } }, :visibility, :type]
+        tp authorities, [{:id => {:width => 36}}, {:name => {:width => max}}, :visibility, :type]
       end
     end
 
@@ -187,7 +187,7 @@ module LMCAdm
         create.flag :A, :required => true
         create.action do |_global_options, options, _args|
           account = LMC::Account.get_by_uuid_or_name options[:A]
-          auth = LMC::Authority.new({ 'name' => _args.first, 'visibility' => 'PRIVATE' }, account)
+          auth = LMC::Authority.new({'name' => _args.first, 'visibility' => 'PRIVATE'}, account)
           puts auth.save
         end
       end
@@ -275,7 +275,7 @@ module LMCAdm
           # POST /accounts/{accountId}/members/{principalId}
           cloud = LMC::Cloud.instance
           cloud.auth_for_account account
-          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], { 'authorities' => authority_ids }
+          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], {'authorities' => authority_ids}
           puts res
         end
       end
