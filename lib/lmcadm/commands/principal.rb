@@ -10,16 +10,7 @@ module LMCAdm
         cloud.auth_for_account root_account
         pw = Helpers::read_pw "Enter new password for #{args.first}:"
         principal = LMC::Principal.new({ 'name' => args.first, 'password' => pw, 'type' => options[:type] })
-        puts principal.save.inspect
-        begin
-        rescue Exception => e
-          puts e.inspect
-          puts e.message.inspect
-          puts e.response
-          puts e.response.message
-        end
-
-
+        puts principal.save
       end
     end
 
@@ -40,7 +31,6 @@ module LMCAdm
         c = LMC::Cloud.instance
         c.auth_for_account LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
         c.delete ['cloud-service-auth', 'principals', args.first]
-
       end
     end
   end
