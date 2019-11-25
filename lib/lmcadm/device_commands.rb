@@ -33,14 +33,17 @@ module LMCAdm
       end
     end
 
-    c.arg_name "device uuid|name", [:multiple, :required]
+    c.arg_name "<device uuid|name>", [:multiple, :required]
     c.desc 'Show device config'
     c.command :config do |device_config|
       device_config.desc 'Account UUID|Name'
       device_config.flag :A, :account
 
-      device_config.desc 'Output descriptive identifiers'
+      device_config.desc 'Output descriptive identifiers, overrides filter oid and lcf format'
       device_config.switch :d, :descriptive
+
+      device_config.desc 'Output lcf file, overrides filter oid'
+      device_config.switch :lcf
 
       device_config.desc 'Write to files'
       device_config.switch :w
@@ -59,19 +62,23 @@ module LMCAdm
         devices = all_devices.select do |device|
           (args.include? device.id) || (args.include? device.name)
         end
+        file_extension = 'json'
         devices.each do |device|
           config = device.config
           if options[:descriptive]
             result_config = config.descriptive_confighash
+          elsif options[:lcf]
+            pretty = config.lcf
+            file_extension = 'lcf'
           elsif options[:filter_oid]
             puts config.confighash
             result_config = config.confighash[options[:filter_oid]]
           else
             result_config = config.confighash
           end
-          pretty = JSON.pretty_generate(result_config)
+          pretty ||= JSON.pretty_generate(result_config)
           if options[:w]
-            IO.write(options[:prefix] + "-" + device.name + '-' + device.id + ".json", pretty)
+            IO.write("#{options[:prefix]}-#{device.name}-#{device.id}.#{file_extension}", pretty)
           else
             puts pretty
           end
