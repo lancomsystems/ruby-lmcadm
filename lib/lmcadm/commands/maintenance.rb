@@ -11,11 +11,12 @@ module LMCAdm
       end
     end
 
-    maintenance.arg_name 'UUID'
+    maintenance.arg_name 'UUID', [:required]
     maintenance.desc 'Enable scripting for an account'
     maintenance.command :scripting do |scr|
       scr.switch :enable
       scr.action do |global_options, options, args|
+        raise "No account UUID specified" if args.length < 1
         root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
         cloud = LMC::Cloud.instance
         cloud.auth_for_account root_account
