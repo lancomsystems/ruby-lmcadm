@@ -30,7 +30,7 @@ module LMCAdm
 
     t.action do |g, o, args|
       account = LMC::Account.get_by_uuid_or_name o[:account]
-      device = account.devices.find { |d| d.name == args.first }
+      device = Helpers::find_device account.devices, name: args.first, id: args.first
       account.cloud.auth_for_account account
       payload = {type: 'TERMINAL',
                  deviceIds: [device.id]}
@@ -58,7 +58,7 @@ module LMCAdm
           closing = false
 
           @ws.onopen do
-            puts "Connected"
+            print "Connected to #{device.name} (#{device.id}):\r\n"
           end
 
           @ws.onmessage do |msg, type|
