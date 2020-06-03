@@ -26,4 +26,22 @@ class LmcadmTest < Minitest::Test
     end
     assert_equal 'Device not found: dup ', e.message
   end
+
+  def test_arg_helper
+    args = []
+    e = assert_raises RuntimeError do
+      LMCAdm::Helpers.ensure_arg args
+    end
+    assert_equal 'Argument missing: No argument specified.', e.message
+    e = assert_raises RuntimeError do
+      LMCAdm::Helpers.ensure_arg args, kind: 'nothing'
+    end
+    assert_equal 'Argument missing: No nothing specified.', e.message
+    e = assert_raises RuntimeError do
+      LMCAdm::Helpers.ensure_arg args, message: 'Idiot!'
+    end
+    assert_equal 'Idiot!', e.message
+    good_args = ['hello']
+    assert_equal good_args, LMCAdm::Helpers.ensure_arg(good_args, kind: 'Greeting')
+  end
 end

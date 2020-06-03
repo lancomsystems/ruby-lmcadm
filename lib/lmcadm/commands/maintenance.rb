@@ -7,7 +7,7 @@ module LMCAdm
         root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
         cloud = LMC::Cloud.instance
         cloud.auth_for_account root_account
-        result = cloud.post ['cloud-service-devices', 'maintenance', 'licenses', 'resync'], { 'accountId' => args[0] }
+        result = cloud.post ['cloud-service-devices', 'maintenance', 'licenses', 'resync'], {'accountId' => args[0]}
       end
     end
 
@@ -33,16 +33,32 @@ module LMCAdm
       end
     end
 
-    maintenance.arg_name 'UUID', required: true
+    maintenance.arg_name 'UUID'
     maintenance.desc 'Exempt user from brute force blocking'
     maintenance.command :whitelist do |wl|
       wl.action do |_g, _o, args|
+        Helpers.ensure_arg args, kind: 'user uuid'
         cloud = LMC::Cloud.instance
         root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
         cloud.auth_for_account root_account
         # POST /accesscontrol/CLAIMING/whitelist/principals/{principalId}
         url_components = ['cloud-service-devices', 'accesscontrol', 'CLAIMING', 'whitelist', 'principals', args.first]
         cloud.post url_components, {}
+      end
+    end
+
+    maintenance.arg_name 'UUID', required: true
+    maintenance.desc 'Remove entity from blacklist'
+    maintenance.command :unblacklist do |unbl|
+      unbl.flag 'entity-type', :t, desc: 'Entity type. Choose "principals" or "accounts".', required: true
+      unbl.flag 'process-type', :p, desc: 'Process type', default_value: 'CLAIMING'
+      unbl.action do |_g, o, args|
+        Helpers.ensure_arg args, kind: 'entity uuid'
+        cloud = LMC::Cloud.instance
+        root_account = LMC::Account.get LMC::Account::ROOT_ACCOUNT_UUID
+        cloud.auth_for_account root_account
+        url_components = ['cloud-service-devices', 'accesscontrol', o['process-type'], o['entity-type'], args.first]
+        cloud.delete url_components
       end
     end
   end
