@@ -59,6 +59,10 @@ module LMCAdm
 
           @ws.onopen do
             print "Connected to #{device.name} (#{device.id}):\r\n"
+            remaining_args = args.drop(1)
+            if remaining_args.length > 0
+              @ws.send '1' + remaining_args.join(' ') + "\r", type: 'binary'
+            end
           end
 
           @ws.onmessage do |msg, type|
