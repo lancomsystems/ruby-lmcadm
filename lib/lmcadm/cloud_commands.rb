@@ -27,6 +27,7 @@ module LMCAdm
         }}
         tp backstage_infos
         puts '---'
+        puts "Base URL: #{cloud.build_url}"
         puts "Principal: #{LMC::Principal.get_self(cloud)}"
 
       end
