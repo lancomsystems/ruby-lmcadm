@@ -67,6 +67,10 @@ module LMCAdm
 
           @ws.onmessage do |msg, type|
             print "##{msg.length}##{msg.inspect}#" if g[:debug]
+            # respond to custom keepalive
+            if msg.start_with? '0'
+              @ws.send '0', type: 'binary'
+            end
             if msg.start_with? "1"
               print msg[1..-1].gsub("\n", "\r\n")
             else
