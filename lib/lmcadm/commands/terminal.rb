@@ -50,8 +50,8 @@ module LMCAdm
       begin
         EventMachine.epoll
         EventMachine.run do
-          trap("TERM") { stop g[:debug]}
-          trap("INT") { stop g[:debug]}
+          trap("TERM") { stop g[:debug] }
+          trap("INT") { stop g[:debug] }
           IO.console.raw!
           EventMachine.open_keyboard(LMCAdm::KeyboardHandler)
           @ws = WebSocket::EventMachine::Client.connect({uri: url, headers: headers_hash})
@@ -68,14 +68,14 @@ module LMCAdm
           @ws.onmessage do |msg, type|
             print "##{msg.length}##{msg.inspect}#" if g[:debug]
             if msg.start_with? "1"
-              print msg[1..-1].gsub("\n","\r\n")
+              print msg[1..-1].gsub("\n", "\r\n")
             else
               print msg if g[:debug]
             end
             print DateTime.now.to_s if g[:debug]
             if msg.include? "\n\nGoodbye\n\n"
               stop g[:debug]
-              closing =  true
+              closing = true
             end
           end
 
@@ -97,7 +97,7 @@ module LMCAdm
             puts "Received pong: #{msg}" if g[:verbose]
           end
 
-          def stop(debug=false)
+          def stop(debug = false)
             print DateTime.now.to_s if debug
             print "Terminating connection\r\n"
             EventMachine.stop
@@ -106,9 +106,9 @@ module LMCAdm
       ensure
         IO.console.cooked!
       end
-        # disabled, getting 401 anyways
-        #account.cloud.auth_for_account account
-        #account.cloud.delete ['cloud-service-devicetunnel', 'accounts', account.id, "terminal?ids=#{sessionInfo.body.first['id']}"]
+      # disabled, getting 401 anyways
+      #account.cloud.auth_for_account account
+      #account.cloud.delete ['cloud-service-devicetunnel', 'accounts', account.id, "terminal?ids=#{sessionInfo.body.first['id']}"]
     end
   end
 end
