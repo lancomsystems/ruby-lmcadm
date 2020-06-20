@@ -29,9 +29,9 @@ module LMCAdm
         accounts.sort {|a, b| a["name"] <=> b["name"]}.each do |account|
           puts account.inspect if global_options[:v]
           if options[:l]
-            puts account["name"] + " (" + account["type"] + ") ID: " + account["id"]
+            puts account.summary
           else
-            puts account["name"] + " (" + account["type"] + ")"
+            puts "\"#{account}\" (#{account["type"]})"
           end
         end
         puts accounts.length.to_s + " Accounts found"

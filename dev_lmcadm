@@ -1,0 +1,4 @@
+#!/bin/sh
+#wrapper script
+#set -x
+LMCADM_PATH_DEP=1 GLI_DEBUG=false bundle exec exe/lmcadm "$@"
