@@ -26,7 +26,7 @@ module LMCAdm
             a["type"] == options[:account_type]
           end
         end
-        accounts.sort {|a, b| a["name"] <=> b["name"]}.each do |account|
+        accounts.sort { |a, b| a["name"] <=> b["name"] }.each do |account|
           puts account.inspect if global_options[:v]
           if options[:l]
             puts account.summary
@@ -82,9 +82,9 @@ module LMCAdm
       account_create.action do |global_options, options, args|
         parent = LMC::Account.get_by_uuid_or_name options[:p]
         t = ProgressVisualizer.new "Creating object"
-        a = LMC::Account.new(LMC::Cloud.instance, {"name" => args.first,
-                                                   "type" => options[GLI::Command::PARENT][:account_type],
-                                                   "parent" => parent.id})
+        a = LMC::Account.new(LMC::Cloud.instance, { "name" => args.first,
+                                                    "type" => options[GLI::Command::PARENT][:account_type],
+                                                    "parent" => parent.id })
         t.done
         t = ProgressVisualizer.new "Saving #{a.name}"
         result = a.save
@@ -106,13 +106,13 @@ module LMCAdm
         t = ProgressVisualizer.new "Getting accounts"
         if options[:e]
           accounts = LMC::Cloud.instance.get_accounts_objects
-          matched_accounts = accounts.select {|account| /#{args.first}/.match(account.name)}
+          matched_accounts = accounts.select { |account| /#{args.first}/.match(account.name) }
         else
           matched_accounts = [LMC::Account.get_by_uuid_or_name(args.first)]
         end
         t.done
         puts 'Accounts to delete:'
-        puts matched_accounts.map {|a| "#{a.id} - #{a.name}"}.join("\n")
+        puts matched_accounts.map { |a| "#{a.id} - #{a.name}" }.join("\n")
         print('Type yes to confirm: ')
         exit unless STDIN.gets.chomp == 'yes'
         t = ProgressVisualizer.new "Deleting accounts"
@@ -159,12 +159,12 @@ module LMCAdm
       memberlist.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name args.first
         members = account.members
-        tp members, [{:id => {:width => 36}}, :name, :type, :state, :invitationState, :principalState,
-                     :authorities => {:display_method => lambda {|m|
-                       m.authorities.map {|a|
+        tp members, [{ :id => { :width => 36 } }, :name, :type, :state, :invitationState, :principalState,
+                     :authorities => { :display_method => lambda { |m|
+                       m.authorities.map { |a|
                          a['name']
                        }.join(',')
-                     }, :width => 128}]
+                     }, :width => 128 }]
       end
     end
 
@@ -174,8 +174,8 @@ module LMCAdm
       auth.action do |_g, _o, args|
         account = LMC::Account.get_by_uuid_or_name args.first
         authorities = account.authorities
-        max = Helpers::longest_in_collection(authorities.map {|a| a.name})
-        tp authorities, [{:id => {:width => 36}}, {:name => {:width => max}}, :visibility, :type]
+        max = Helpers::longest_in_collection(authorities.map { |a| a.name })
+        tp authorities, [{ :id => { :width => 36 } }, { :name => { :width => max } }, :visibility, :type]
       end
     end
 
@@ -187,7 +187,7 @@ module LMCAdm
         create.flag :A, :required => true
         create.action do |_global_options, options, _args|
           account = LMC::Account.get_by_uuid_or_name options[:A]
-          auth = LMC::Authority.new({'name' => _args.first, 'visibility' => 'PRIVATE'}, account)
+          auth = LMC::Authority.new({ 'name' => _args.first, 'visibility' => 'PRIVATE' }, account)
           puts auth.save
         end
       end
@@ -202,7 +202,7 @@ module LMCAdm
       account_invite.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name options[:account]
         cloud = LMC::Cloud.instance
-        chosen_authorities = account.authorities.select {|auth| auth.name == options[:role]}
+        chosen_authorities = account.authorities.select { |auth| auth.name == options[:role] }
         args.each do |email|
           cloud.invite_user_to_account email, account.id, options[:type], chosen_authorities
         end
@@ -275,7 +275,7 @@ module LMCAdm
           # POST /accounts/{accountId}/members/{principalId}
           cloud = LMC::Cloud.instance
           cloud.auth_for_account account
-          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], {'authorities' => authority_ids}
+          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], { 'authorities' => authority_ids }
           puts res
         end
       end
@@ -288,16 +288,12 @@ module LMCAdm
       children.flag :special
       children.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name args.first
-        cloud = LMC::Cloud.instance
 
         def recurse_childen account, indent_level
           children = account.children
           children.each do |child|
             puts '  ' * indent_level + child.to_s
-            begin
-              recurse_childen child, indent_level + 1
-            rescue RestClient::Forbidden => e
-            end
+            recurse_childen child, indent_level + 1
           end
         end
 
