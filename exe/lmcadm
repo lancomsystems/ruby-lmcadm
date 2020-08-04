@@ -25,7 +25,7 @@ module LMCAdm
   commands_from "lmcadm/commands"
 
   desc 'Be verbose'
-  switch [:v, :verbose]
+ switch [:verbose ,:v]
 
   desc 'debug'
   switch [:debug]
@@ -35,7 +35,7 @@ module LMCAdm
 
   desc 'cloud host'
   default_value "cloud.lancom.de"
-  flag :C, :cloud_host
+  flag :cloud_host, :C
 
   desc 'Use encrypted connection'
   default_value true
@@ -46,12 +46,12 @@ module LMCAdm
   switch "verify-tls"
 
   desc 'username'
-  default_value "admin"
-  flag :U, :user
+  default_value ""
+  flag :user, :U
 
   desc 'password'
   default_value ""
-  flag [:P, :password], :mask => true
+  flag [:password, :P], :mask => true
 
 
   pre do |global, command, options, args|
