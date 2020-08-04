@@ -25,7 +25,7 @@ module LMCAdm
   commands_from "lmcadm/commands"
 
   desc 'Be verbose'
- switch [:verbose ,:v]
+  switch :verbose, :v
 
   desc 'debug'
   switch [:debug]
