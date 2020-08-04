@@ -60,8 +60,14 @@ module LMCAdm
     # chosen command
     # Use skips_pre before a command to skip this block
     # on that command only
-    if command.name != :completion && global[:password] == ""
-      global[:password] = Helpers::read_pw "Enter password for #{global[:user]}:"
+    if command.name != :completion
+      if global[:user] == ""
+        print "Enter user:"
+        global[:user] = STDIN.gets.chomp
+      end
+      if global[:password] == ""
+        global[:password] = Helpers::read_pw "Enter password for #{global[:user]}:"
+      end
     end
     ::LMC::Cloud.cloud_host = global[:cloud_host]
     ::LMC::Cloud.user = global[:user]
