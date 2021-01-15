@@ -7,7 +7,7 @@ module LMCAdm #:nodoc:
     preferences.arg_name 'accounts'
     preferences.command :lastaccounts do |la|
       la.action do |g, _o, args|
-        cloud = LMC::Cloud.new(g[:cloud_host], g[:user], g[:password])
+        cloud = LMC::Cloud.instance
         self_ui = cloud.preferences [:principals, :self, :ui]
         if args.empty?
           ids = self_ui.get 'lastAccountIds'

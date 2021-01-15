@@ -53,6 +53,9 @@ module LMCAdm
   default_value ""
   flag [:password, :P], :mask => true
 
+  desc 'Use 2FA code'
+  default_value false
+  switch [:code, 'F']
 
   pre do |global, command, options, args|
     # Pre logic here
@@ -68,10 +71,15 @@ module LMCAdm
       if global[:password] == ""
         global[:password] = Helpers::read_pw "Enter password for #{global[:user]}:"
       end
+      twofactor_code = nil
+      if global[:code]
+        twofactor_code = Helpers::read_pw "Enter 2FA code:"
+      end
     end
     ::LMC::Cloud.cloud_host = global[:cloud_host]
     ::LMC::Cloud.user = global[:user]
     ::LMC::Cloud.password = global[:password]
+    ::LMC::Cloud.code = twofactor_code
     ::LMC::Cloud.verbose = global[:verbose]
     ::LMC::Cloud.debug = global[:debug]
     ::LMC::Cloud.verify_tls = global["verify-tls"]

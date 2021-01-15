@@ -8,13 +8,15 @@ module LMCAdm
   command :cloud do |c|
     c.desc 'Check cloud connectivity'
     c.action do |global_options|
-      lmcen = LMC::Cloud.new(global_options[:cloud_host], global_options[:user], global_options[:password])
+      lmcen = LMC::Cloud.instance
       puts "Base URL: #{lmcen.build_url}"
       puts "Cloud connection OK" if lmcen.auth_ok
       if global_options[:v]
         puts "authentication token: " + lmcen.session_token
       end
     end
+
+    c.desc 'Display cloud version information'
     c.command :about do |cloud_about|
       cloud_about.action do |global_options|
         cloud = LMC::Cloud.instance
