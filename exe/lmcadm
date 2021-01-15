@@ -33,7 +33,7 @@ module LMCAdm
   desc 'Measure time taken for operations'
   switch "take-time"
 
-  desc 'cloud host'
+  desc 'LMC host, may include a port number'
   default_value "cloud.lancom.de"
   flag :cloud_host, :C
 
