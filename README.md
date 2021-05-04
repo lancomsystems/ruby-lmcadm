@@ -8,6 +8,12 @@ Install via rubygems:
 
     $ gem install lmcadm
 
+### Requirements
+Building native extensions for certain dependencies require ruby headers or source code to be present.
+These can usually be installed the same way ruby was installed.
+
+On Ubuntu for example, installing the `ruby-dev` via the package manager is sufficient.
+
 ## Usage
 
 The primary usage documentation is in the help output of lmcadm:

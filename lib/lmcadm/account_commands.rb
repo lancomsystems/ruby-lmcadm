@@ -16,7 +16,7 @@ module LMCAdm
       account_list.switch :l, :long
       account_list.action do |global_options, options, args|
         t = ProgressVisualizer.new "Cloud login"
-        lmcen = LMC::Cloud.new(global_options[:cloud_host], global_options[:user], global_options[:password])
+        lmcen = LMC::Cloud.instance
         t.done
         t = ProgressVisualizer.new "Getting accounts"
         accounts = lmcen.get_accounts_objects

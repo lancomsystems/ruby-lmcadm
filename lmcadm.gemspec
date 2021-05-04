@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "pry-nav", "0.2.4"
 
-  spec.add_runtime_dependency 'lmc', '~> 0.12.0'
+  spec.add_runtime_dependency 'lmc', '~> 0.13.0'
   spec.add_runtime_dependency 'gli', '~> 2.17'
   spec.add_runtime_dependency 'table_print', '~> 1.5'
   spec.add_runtime_dependency 'colorize', '~> 0.8'
