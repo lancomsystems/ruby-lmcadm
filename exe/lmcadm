@@ -85,6 +85,9 @@ module LMCAdm
     ::LMC::Cloud.verify_tls = global["verify-tls"]
     ::LMC::Cloud.use_tls = global["use-tls"]
     LMCAdm::ProgressVisualizer.take_time = global["take-time"]
+    # let table_print print wide columns
+    tp.set :max_width, 50
+
     true
   end
 
