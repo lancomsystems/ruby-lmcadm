@@ -15,7 +15,7 @@ module LMCAdm
     end
     rights.arg_name "rights"
     rights.command :assign do |assign|
-      assign.flag :A
+      assign.flag :A, :account
       assign.flag :authority
       assign.flag :service
       assign.action do |_g, o, a |
@@ -23,7 +23,11 @@ module LMCAdm
         account = LMC::Account.get_by_uuid_or_name o[:A]
         c = LMC::Cloud.instance
         c.auth_for_account account
-        c.post [o[:service], "accounts", account.id, 'authorities', o[:authority], 'rights' ], a
+        service_name = o[:service]
+        unless service_name.start_with? 'cloud-service-'
+          service_name = 'cloud-service-' + service_name
+        end
+        c.post [service_name, "accounts", account.id, 'authorities', o[:authority], 'rights' ], a
 
       end
     end
