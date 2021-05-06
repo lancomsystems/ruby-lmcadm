@@ -256,28 +256,40 @@ module LMCAdm
       update.flag :A, :account, :required => true
       update.desc 'authority id'
       update.flag 'add-authority'
-      update.action do |_global_options, options, args|
+      update.desc 'authority name|id'
+      update.flag 'remove-authority'
+      update.action do |global_options, options, args|
         account = LMC::Account.get_by_uuid_or_name(options[:account])
+        account.cloud.auth_for_account account
         membership = account.find_member_by_name args.first
-        puts membership
-        if options['add-authority']
-          # new_authority = account.authorities.find do |a|
-          #   a.name == options['add-authority']
-          # end
-          puts membership.class
-          puts membership.authorities.class
-          authority_ids = membership.authorities.map do |a|
-            a['id']
-          end
-          puts authority_ids
-          authority_ids = authority_ids.concat [options['add-authority']]
-          puts authority_ids
-          # POST /accounts/{accountId}/members/{principalId}
-          cloud = LMC::Cloud.instance
-          cloud.auth_for_account account
-          res = cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], { 'authorities' => authority_ids }
-          puts res
+        puts "membership class: #{membership.class}"
+        puts "membership.authorities first class: #{membership.authorities.first.class}"
+
+        #real_membership = LMC::Membership.new membership
+        #puts real_membership.inspect
+
+
+        puts membership if global_options[:verbose]
+        authority_ids = membership.authorities.map do |a|
+          a.id
         end
+        puts "Existing authority ids: #{authority_ids}"
+        if options['add-authority']
+          add_str = options['add-authority']
+          new_authority = Helpers::find_by_id_or_name membership.authorities, add_str
+          authority_ids = authority_ids.concat [new_authority.id]
+          puts "Adding #{authority_ids}"
+        end
+        if options['remove-authority']
+          remove_str = options['remove-authority']
+          deleting_authority = Helpers.find_by_id_or_name account.authorities, remove_str
+          puts "Removing #{deleting_authority}"
+          authority_ids = authority_ids - [deleting_authority.id]
+        end
+        puts "New authority ids: #{authority_ids}"
+        # POST /accounts/{accountId}/members/{principalId}
+        res = account.cloud.post ['cloud-service-auth', 'accounts', account.id, 'members', membership.id], { 'authorities' => authority_ids }
+        puts res
       end
     end
 
