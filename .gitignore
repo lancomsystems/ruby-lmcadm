@@ -15,3 +15,5 @@
 /.idea/modules.xml
 /Gemfile.lock
 /lmcadm-*.gem
+ocra_gemfile
+lmcadm*.exe
