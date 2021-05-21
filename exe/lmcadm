@@ -109,5 +109,8 @@ module LMCAdm
     true
   end
 
+  if Encoding.find('locale') != 'UTF-8'
+    STDIN.set_encoding(Encoding.find('locale'),'UTF-8')
+  end
   exit run(ARGV)
 end
