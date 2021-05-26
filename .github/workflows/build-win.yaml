@@ -1,5 +1,8 @@
 name: build-win
-on: [workflow_dispatch]
+on:
+  push:
+    tags:
+      - 'v*.*.*'
 jobs:
   build:
     runs-on: windows-latest
