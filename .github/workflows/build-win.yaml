@@ -10,6 +10,8 @@ jobs:
       - run: gem install ocra lmcadm
       - run: ruby makeocragemfile.rb
       - run: ocra --gemfile ocra_gemfile --gem-full exe/lmcadm
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - run: ./lmcadm.exe version
       - uses: papeloto/action-zip@v1
         with:
