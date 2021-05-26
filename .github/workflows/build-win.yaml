@@ -8,7 +8,17 @@ jobs:
       - uses: ruby/setup-ruby@v1
       - run: gem install eventmachine --platform ruby
       - run: gem install ocra lmcadm
-        #- run: bundle install
       - run: ruby makeocragemfile.rb
       - run: ocra --gemfile ocra_gemfile --gem-full exe/lmcadm
+      - run: ./lmcadm.exe version
+      - uses: papeloto/action-zip@v1
+        with:
+          files: lmcadm.exe LICENSE.txt
+          dest: ${{ github.event.release.tag_name }}-win.zip
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ github.event.release.tag_name }}-win.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
