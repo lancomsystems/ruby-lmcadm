@@ -1,0 +1,13 @@
+name: build-win
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+      - run: gem install eventmachine --platform ruby
+      - run: gem install ocra
+      - run: ruby makeocragemfile.rb
+      - run: ocra --gemfile ocra_gemfile --gem-full exe/lmcadm
+
