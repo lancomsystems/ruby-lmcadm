@@ -7,8 +7,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
       - run: gem install eventmachine --platform ruby
-      - run: gem install ocra
-      - run: bundle install
+      - run: gem install ocra lmcadm
+        #- run: bundle install
       - run: ruby makeocragemfile.rb
       - run: ocra --gemfile ocra_gemfile --gem-full exe/lmcadm
 
