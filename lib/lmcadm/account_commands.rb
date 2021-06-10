@@ -262,21 +262,18 @@ module LMCAdm
         account = LMC::Account.get_by_uuid_or_name(options[:account])
         account.cloud.auth_for_account account
         membership = account.find_member_by_name args.first
-        puts "membership class: #{membership.class}"
-        puts "membership.authorities first class: #{membership.authorities.first.class}"
-
-        #real_membership = LMC::Membership.new membership
-        #puts real_membership.inspect
-
-
-        puts membership if global_options[:verbose]
+        if global_options[:verbose]
+          puts "membership class: #{membership.class}"
+          puts "membership.authorities first class: #{membership.authorities.first.class}"
+          puts membership
+        end
         authority_ids = membership.authorities.map do |a|
           a.id
         end
         puts "Existing authority ids: #{authority_ids}"
         if options['add-authority']
           add_str = options['add-authority']
-          new_authority = Helpers::find_by_id_or_name membership.authorities, add_str
+          new_authority = Helpers::find_by_id_or_name account.authorities, add_str
           authority_ids = authority_ids.concat [new_authority.id]
           puts "Adding #{authority_ids}"
         end
