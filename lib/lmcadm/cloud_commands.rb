@@ -86,6 +86,7 @@ module LMCAdm
         accounts = args.map { |a|
           LMC::Account.get_by_uuid_or_name a
         }
+        puts LMC::Cloud.instance.session_token if accounts.empty?
         accounts.each { |a|
           a.cloud.auth_for_account a
           puts a.cloud.session_token
