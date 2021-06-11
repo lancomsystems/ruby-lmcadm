@@ -20,6 +20,11 @@ Lmcadm works with https://rubyinstaller.org/downloads/, use the recommended vers
 Installation can continue with rubygems.
 
 #### Known issues
+*Installing lmcadm fails with `ERROR: Failed to build gem native extension.`*
+
+Ruby headers and some tools to build software (C compiler, make) are needed.
+On Ubuntu for example, the packages `ruby-dev` and `build-essential` should be enough.
+    apt install ruby-dev build-essential
 
 *Unable to load the EventMachine C extension ; To use the pure-ruby reactor, require 'em/pure_ruby'*
 
