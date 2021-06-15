@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'chronic'
 
 module LMCAdm #:nodoc:
   desc 'Retrieve montoring data'
@@ -15,7 +16,7 @@ module LMCAdm #:nodoc:
       monitor_device.action do |_g, options, args|
         record_name = args.shift
         account = LMC::Account.get_by_uuid_or_name options[GLI::Command::PARENT][:account]
-        device = account.devices.find {|d| d.name == options[:device]}
+        device = account.devices.find { |d| d.name == options[:device] }
         record = device.record record_name
 
         options[:scalar].each do |datapoint|
@@ -48,5 +49,50 @@ module LMCAdm #:nodoc:
         end
       end
     end
+
+    monitor.desc 'Make raw monitoring requests'
+    monitor.arg_name '<record> <name> <id>'
+    monitor.command :raw do |raw|
+      raw.flag :t, :type, default_value: 'scalar'
+      raw.flag :g, :group, default_value: 'DEVICE'
+      raw.flag :p, :period, default_value: 'MINUTE1'
+      raw.desc 'Start time'
+      raw.flag :start, default_value: 'one hour ago'
+      raw.flag :end, default_value: 'now'
+      raw.action do |_g, options, args|
+        record = args.shift
+        name = args.shift
+        groupId = args.shift
+        account = LMC::Account.get_by_uuid_or_name options[GLI::Command::PARENT][:account]
+        account.cloud.auth_for_account account
+
+        startTime = Chronic.parse(options[:start])
+        puts "Start time: #{startTime}" if _g[:verbose]
+        endTime = Chronic.parse(options[:end])
+        puts "End time: #{endTime}" if _g[:verbose]
+
+        # https://cloud.lancom.de/cloud-service-monitoring/accounts/399bc33a-7f53-4757-a6bd-cac3cbb6ebdd/records/wlan_info_json?type=scalar&name=stations&group=ACCOUNT&groupId=399bc33a-7f53-4757-a6bd-cac3cbb6ebdd&period=MINUTE1&start=1623417748&end=1623421348
+        # https://cloud.lancom.de/cloud-service-monitoring/accounts/399bc33a-7f53-4757-a6bd-cac3cbb6ebdd/records/device_info?type=scalar&name=cloud_rtt&group=DEVICE&groupId=efec12e1-ac4d-459d-bb5d-a9b6c1410eb5&period=MINUTE1&start=1623419874&end=1623423474
+        # https://cloud.lancom.de/cloud-service-monitoring/accounts/399bc33a-7f53-4757-a6bd-cac3cbb6ebdd/records/device_info?type=scalar&name=cloud_rtt&group=DEVICE&group_id=efec12e1-ac4d-459d-bb5d-a9b6c1410eb5&period=MINUTE1&start=1623419874&end=1623423474
+        result = account.cloud.get ['cloud-service-monitoring', 'accounts', account.id, 'records', record], {
+          type: options[:type],
+          name: name,
+          group: options[:group],
+          groupId: groupId,
+          period: options[:period],
+          start: startTime.to_i,
+          end: endTime.to_i,
+        }
+        monitordata = result.body.items[name]
+        puts result.body.inspect if _g[:debug]
+        if options[:type] == "scalar"
+          puts monitordata.values
+        elsif options[:type] == "json"
+          puts JSON.pretty_generate monitordata.to_h[:values]
+        end
+      end
+
+    end
+
   end
 end

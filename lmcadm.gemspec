@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'table_print', '~> 1.5'
   spec.add_runtime_dependency 'colorize', '~> 0.8'
   spec.add_runtime_dependency 'websocket-eventmachine-client', '~> 1.3.0'
+  spec.add_runtime_dependency 'chronic', '~> 0.10.2'
 end

@@ -64,3 +64,35 @@ The sentence above is patently wrong currently.
 ## License
 
 The gem is available as open source under the terms of the BSD 3-Clause License.
+
+# Advanced usage or experimental features
+
+## Using lmcadm to query monitoring data
+
+Example use:
+
+    lmcadm monitor -A "ExampleProject" raw device_info cloud_rtt 42adf60b-0fe7-4187-af4f-9ee97669bfb0
+
+### --type scalar (default)
+
+When specifying a period longer than MINUTE1, the name must be suffixed with a dot, followed by an aggregation type.
+Available types are
+* .min
+* .max
+* .avg
+
+
+    lmcadm monitor -A "ExampleProject" raw --type scalar --period MINUTE10 \
+        device_info cloud_rtt.max 3e19ada7-86fa-4809-a14e-7174b018603d
+
+
+### --type json
+
+This dumps the raw values response as json.
+To further extract data, use something that can parse json, like `jq`[1].
+
+    lmcadm monitor -A "SDN-DEMO (LANCOM Visitor)" raw --type json --period MINUTE1 \
+      wan_info_json interfaces a6871a81-84f3-4c57-a20e-c3410b47e895  | jq ' .[]["DSL-CH-1"].rxRate'
+
+# Footnotes
+[1] https://stedolan.github.io/jq/manual/
