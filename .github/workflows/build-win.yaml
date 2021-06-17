@@ -25,11 +25,11 @@ jobs:
       - uses: papeloto/action-zip@v1
         with:
           files: lmcadm.exe LICENSE.txt
-          dest: ${{ github.event.release.tag_name }}-win.zip
+          dest: lmcadm-${{ github.event.release.tag_name }}-win.zip
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.event.release.tag_name }}-win.zip
+          files: lmcadm-${{ github.event.release.tag_name }}-win.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
