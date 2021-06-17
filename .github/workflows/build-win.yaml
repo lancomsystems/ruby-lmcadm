@@ -1,8 +1,13 @@
 name: build-win
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types:
+      - published
+
+#  push:
+#    tags:
+#      - 'v*.*.*'
+
 jobs:
   build:
     runs-on: windows-latest
