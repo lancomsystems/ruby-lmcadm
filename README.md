@@ -81,6 +81,7 @@ Available types are
 * .max
 * .avg
 
+Example use:
 
     lmcadm monitor -A "ExampleProject" raw --type scalar --period MINUTE10 \
         device_info cloud_rtt.max 3e19ada7-86fa-4809-a14e-7174b018603d
@@ -90,6 +91,8 @@ Available types are
 
 This dumps the raw values response as json.
 To further extract data, use something that can parse json, like `jq`[1].
+
+Example use:
 
     lmcadm monitor -A "SDN-DEMO (LANCOM Visitor)" raw --type json --period MINUTE1 \
       wan_info_json interfaces a6871a81-84f3-4c57-a20e-c3410b47e895  | jq ' .[]["DSL-CH-1"].rxRate'
