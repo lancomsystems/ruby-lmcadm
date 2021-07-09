@@ -91,13 +91,15 @@ module LMCAdm #:nodoc:
           puts JSON.pretty_generate monitordata.to_h[:values]
         elsif options[:type] == 'table'
           table_data = monitordata.values.map { |v|
-            row = v.first
             hash = {}
-            monitordata.keys.each_with_index { |k, index|
-              unless row[index].nil?
-                hash[k] = v.first[index]
-              end
-            }
+            unless v.nil?
+              row = v.first
+              monitordata.keys.each_with_index { |k, index|
+                unless row[index].nil?
+                  hash[k] = v.first[index]
+                end
+              }
+            end
             hash
           }
           tp table_data
