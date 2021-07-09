@@ -85,10 +85,22 @@ module LMCAdm #:nodoc:
         }
         monitordata = result.body.items[name]
         puts result.body.inspect if _g[:debug]
-        if options[:type] == "scalar"
+        if options[:type] == 'scalar'
           puts monitordata.values
-        elsif options[:type] == "json"
+        elsif options[:type] == 'json'
           puts JSON.pretty_generate monitordata.to_h[:values]
+        elsif options[:type] == 'table'
+          table_data = monitordata.values.map { |v|
+            row = v.first
+            hash = {}
+            monitordata.keys.each_with_index { |k, index|
+              unless row[index].nil?
+                hash[k] = v.first[index]
+              end
+            }
+            hash
+          }
+          tp table_data
         end
       end
 
