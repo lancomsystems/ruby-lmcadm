@@ -83,7 +83,7 @@ Available types are
 
 Example use:
 
-    lmcadm monitor -A "ExampleProject" raw --type scalar --period MINUTE10 \
+    $ lmcadm monitor -A "ExampleProject" raw --type scalar --period MINUTE10 \
         device_info cloud_rtt.max 3e19ada7-86fa-4809-a14e-7174b018603d
 
 
@@ -94,8 +94,23 @@ To further extract data, use something that can parse json, like `jq`[1].
 
 Example use:
 
-    lmcadm monitor -A "SDN-DEMO (LANCOM Visitor)" raw --type json --period MINUTE1 \
-      wan_info_json interfaces a6871a81-84f3-4c57-a20e-c3410b47e895  | jq ' .[]["DSL-CH-1"].rxRate'
+    $lmcadm monitor -A "ExampleProject" raw --type json --period MINUTE1 \
+       wan_info_json interfaces a6871a81-84f3-4c57-a20e-c3410b47e895  | jq ' .[]["DSL-CH-1"].rxRate'
+
+### --type table
+
+Prints table data as one row per sample.
+Empty row handling is shaky, as is error handling in general.
+
+    $ lmcadm  monitor -A "ExampleProject" raw --type table device_info \
+       device 3a096938-87b4-47c8-a388-fda75f30eacc
+    CLOUD_RTT | CPU_LOAD | UPTIME   | TOTAL_MEMORY | FREE_MEMORY | CONTROL_RX | CONTROL_TX | MONITORING_RX | MONITORING_TX
+    ----------|----------|----------|--------------|-------------|------------|------------|---------------|--------------
+    29        | 1        | 19512712 | 248064       | 27228       | 513704725  | 291602474  | 119108008     | 936963871    
+    29        | 0        | 19512652 | 248064       | 27228       | 513701635  | 291600722  | 119107296     | 936957306    
+    30        | 1        | 19512592 | 248064       | 27228       | 513698545  | 291598970  | 119106584     | 936950729    
+    77        | 6        | 19512533 | 248064       | 27228       | 513695455  | 291597218  | 119105872     | 936944149    
+    ...
 
 # Footnotes
 [1] https://stedolan.github.io/jq/manual/
