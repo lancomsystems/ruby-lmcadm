@@ -88,23 +88,26 @@ module LMCAdm #:nodoc:
         monitordata = result.body.items[name]
         puts result.body.inspect if _g[:debug]
         if options[:type] == 'scalar'
-          table_data = monitordata.values.map.with_index { |value, row_index|
+          table_data = monitordata.values.map.with_index { |row, row_index|
             {
-              timestamp: DateTime.strptime((base_timestamp + delta * (monitordata.values.length - row_index)).to_s,'%s'),
-              value: value,
+              timestamp: DateTime.strptime((base_timestamp + delta * (monitordata.values.length - row_index)).to_s, '%s'),
+              value: row,
             }
           }
           tp table_data
         elsif options[:type] == 'json'
-          puts JSON.pretty_generate monitordata.to_h[:values]
+          monitordata.to_h[:values].each.with_index { |row, row_index|
+            puts DateTime.strptime((base_timestamp + delta * (monitordata.values.length - row_index)).to_s, '%s')
+            puts JSON.pretty_generate row
+          }
         elsif options[:type] == 'table'
-          table_data = monitordata.values.map.with_index { |v, row_index|
-            hash = { timestamp: DateTime.strptime((base_timestamp + delta * (monitordata.values.length - row_index)).to_s,'%s') }
-            unless v.nil?
-              row = v.first
+          table_data = monitordata.values.map.with_index { |row, row_index|
+            hash = { timestamp: DateTime.strptime((base_timestamp + delta * (monitordata.values.length - row_index)).to_s, '%s') }
+            unless row.nil?
+              row = row.first
               monitordata.keys.each_with_index { |k, column_index|
                 unless row[column_index].nil?
-                  hash[k] = v.first[column_index]
+                  hash[k] = row.first[column_index]
                 end
               }
             end
